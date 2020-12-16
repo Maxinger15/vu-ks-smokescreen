@@ -3,4 +3,3 @@
 
 * placeable **smokescreen**
 
-![](./github_styles/strike.gif)
