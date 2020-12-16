@@ -1,7 +1,6 @@
-# vu-artillerystrike
-* Inspired by [J4ssent](https://github.com/J4nssent/VU-Mods/tree/master/AirStrike)
+# vu-ks-smokescreen
 * Compatibel with [this mod](https://github.com/Maxinger15/VU-Killstreak)
 
-* placeable **mortarstrike**
+* placeable **smokescreen**
 
 ![](./github_styles/strike.gif)
