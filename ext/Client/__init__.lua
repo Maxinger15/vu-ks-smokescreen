@@ -39,7 +39,7 @@ local RED = Vec4(1, 0, 0, 0.5)
 local WHITE = Vec4(1, 1, 1, 0.5)
 
 
-local MISSILE_AIRTIME = 7
+local MISSILE_AIRTIME = 5
 local startDelay = MISSILE_AIRTIME
 Hooks:Install(
 	"UI:PushScreen",
@@ -144,9 +144,10 @@ Events:Subscribe(
 				end
 
 				if InputManager:WentKeyDown(InputDeviceKeys.IDK_F9) and pointOfAim.mode == FiringMode.Area then
+					Events:Dispatch("Killstreak:showNotification", json.encode({title = "Artillery", message = "Fire order received"}))
 					timer = TIME_BETWEEN_STRIKES
 					secondRound = false
-					Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME+1, text = "Deploying..."}))
+					Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME+1, text = "till smoke impact"}))
 					AreaStrike(pointOfAim.position)
 
 					zones[#zones + 1] = {position = pointOfAim.position, points = {}, timer = STRIKE_DURATION + MISSILE_AIRTIME}
