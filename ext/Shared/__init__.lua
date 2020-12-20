@@ -21,13 +21,16 @@ Events:Subscribe('Partition:Loaded', function(partition)
     --..tostring(artyProjectileData.explosion.hasStunEffect).." | "..tostring(artyProjectileData.explosion.cameraShockwaveRadius).." | ")
     -- Make changes...
     artyProjectileData.explosion.blastDamage = 0
-    artyProjectileData.explosion.blastRadius = 30
-    artyProjectileData.explosion.innerBlastRadius = 25
-    artyProjectileData.explosion.shockwaveRadius = 8
-    artyProjectileData.explosion.shockwaveImpulse = 20
-    artyProjectileData.explosion.shockwaveTime = 0.25
+    artyProjectileData.explosion.blastImpulse = 0
+    artyProjectileData.explosion.empTime = 0
+    artyProjectileData.explosion.blastRadius = 0
+    artyProjectileData.explosion.innerBlastRadius = 0
+    artyProjectileData.explosion.shockwaveRadius = 0
+    artyProjectileData.explosion.shockwaveImpulse = 0
+    artyProjectileData.explosion.shockwaveTime = 0
     artyProjectileData.explosion.hasStunEffect = false
     artyProjectileData.explosion.shockwaveDamage = 0
+
     --print(tostring(artyProjectileData.explosion.blastRadius).." | "..tostring(artyProjectileData.explosion.innerBlastRadius).." | "..tostring(artyProjectileData.explosion.blastDamage).." | "..tostring(artyProjectileData.explosion.shockwaveImpulse).." | "..tostring(artyProjectileData.explosion.shockwaveRadius).." | "..tostring(artyProjectileData.explosion.shockwaveTime).." | "
     --..tostring(artyProjectileData.explosion.hasStunEffect).." | "..tostring(artyProjectileData.explosion.cameraShockwaveRadius).." | ")
     partition:AddInstance(artyProjectileBlueprint)

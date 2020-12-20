@@ -1,7 +1,7 @@
 local STRIKE_AREA_RADIUS = 23
 local STRIKE_DURATION = 3
 local STRIKE_MISSILE_COUNT = 30
-local TIME_BETWEEN_STRIKES = 15
+local TIME_BETWEEN_STRIKES = 12
 local debug = false
 local FiringMode = {
 	Disabled = 0,
@@ -30,6 +30,7 @@ local secondStrike = {}
 local secondRound = false
 local zones = {}
 
+local fired = 0
 local timer = 1
 local drawHudEvent = nil
 local updateEvent = nil
@@ -37,8 +38,9 @@ local updateEvent = nil
 local RED = Vec4(1, 0, 0, 0.5)
 local WHITE = Vec4(1, 1, 1, 0.5)
 
-local MISSILE_AIRTIME = 7
 
+local MISSILE_AIRTIME = 7
+local startDelay = MISSILE_AIRTIME
 Hooks:Install(
 	"UI:PushScreen",
 	1,
@@ -116,7 +118,7 @@ if (debug) then
 			if InputManager:WentKeyDown(InputDeviceKeys.IDK_E) and pointOfAim.mode == FiringMode.Area then
 				timer = TIME_BETWEEN_STRIKES
 				secondRound = false
-				Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME, text = "Deploying..."}))
+				Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME, text = "Firing smokes.."}))
 				AreaStrike(pointOfAim.position)
 
 				zones[#zones + 1] = {position = pointOfAim.position, points = {}, timer = STRIKE_DURATION + MISSILE_AIRTIME}
@@ -144,7 +146,7 @@ Events:Subscribe(
 				if InputManager:WentKeyDown(InputDeviceKeys.IDK_F9) and pointOfAim.mode == FiringMode.Area then
 					timer = TIME_BETWEEN_STRIKES
 					secondRound = false
-					Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME, text = "Deploying..."}))
+					Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME+1, text = "Deploying..."}))
 					AreaStrike(pointOfAim.position)
 
 					zones[#zones + 1] = {position = pointOfAim.position, points = {}, timer = STRIKE_DURATION + MISSILE_AIRTIME}
@@ -185,7 +187,12 @@ Events:Subscribe(
 	function(dt)
 		arr = {}
 		arr = pending
-
+		arrCount = 0
+		  for _ in pairs(arr) do arrCount = arrCount + 1 end
+		if startDelay > 0 and arrCount > 0 then
+			startDelay = startDelay - dt
+			return
+		end 
 		for i = #arr, 1, -1 do
 			arr[i].timer = arr[i].timer - dt
 
@@ -195,19 +202,25 @@ Events:Subscribe(
 				targets[#targets + 1] = arr[i]
 
 				NetEvents:SendLocal("vu-ks-smokescreen:Launch", arr[i].position)
-
+				fired = fired +1
 				table.remove(arr, i)
 			end
 		end
-		if secondRound == false then
+		if secondRound == false and fired == STRIKE_MISSILE_COUNT then
 			if timer > 0 then
 				timer = timer - dt
-				print("new timer: " .. tostring(timer))
 			else
 				print("Starting second Strike")
 				AreaStrike(pointOfAim.position)
 				secondRound = true
+				fired = 0
+				
 			end
+		end
+		if secondRound == true and fired == STRIKE_MISSILE_COUNT then
+			secondRound = false
+			fired = 0
+			startDelay = MISSILE_AIRTIME
 		end
 
 		for i = #targets, 1, -1 do
