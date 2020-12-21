@@ -144,7 +144,7 @@ Events:Subscribe(
 				end
 
 				if InputManager:WentKeyDown(InputDeviceKeys.IDK_F9) and pointOfAim.mode == FiringMode.Area then
-					Events:Dispatch("Killstreak:showNotification", json.encode({title = "Artillery", message = "Fire order received"}))
+					Events:Dispatch("Killstreak:showNotification", json.encode({title = "Smokescreen", message = "Fire order received"}))
 					timer = TIME_BETWEEN_STRIKES
 					secondRound = false
 					Events:Dispatch("Killstreak:newTimer", json.encode({duration = MISSILE_AIRTIME+1, text = "till smoke impact"}))
